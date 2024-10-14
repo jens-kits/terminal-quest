@@ -50,7 +50,7 @@ class World:
         for loc_data in locations:
             location = self.locations[loc_data['name']]
             for exit_dir, exit_loc in loc_data.get('exits', {}).items():
-                location.exits[exit_dir] = self.locations[exit_loc]
+                location.exits[exit_dir] = exit_loc
             for item_name in loc_data.get('items', []):
                 if item_name in self.items:
                     location.add_item(self.items[item_name])

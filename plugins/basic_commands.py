@@ -22,16 +22,25 @@ class BasicCommandsPlugin:
     @staticmethod
     def move(game, command):
         direction = command.split()[-1][0].lower()  # Get first letter of last word
-        new_location = game.world.get_location(game.player.current_location).get_exit(direction)
-        if new_location:
-            game.player.current_location = new_location
-            return f"You move {direction}.\n\n" + BasicCommandsPlugin.look(game)
+        current_location = game.world.get_location(game.player.current_location)
+        if current_location is None:
+            return "Error: You are in an invalid location."
+        
+        new_location_name = current_location.get_exit(direction)
+        if new_location_name:
+            game.player.current_location = new_location_name
+            new_location = game.world.get_location(new_location_name)
+            if new_location is None:
+                return f"Error: Invalid destination '{new_location_name}'. Staying in current location."
+            return f"You move {direction}.\n\n" + new_location.describe()
         else:
             return "You can't go that way."
 
     @staticmethod
     def look(game):
         location = game.world.get_location(game.player.current_location)
+        if location is None:
+            return "Error: You are in an invalid location."
         return location.describe()
 
     @staticmethod
@@ -43,6 +52,8 @@ class BasicCommandsPlugin:
     @staticmethod
     def take(game, item_name):
         location = game.world.get_location(game.player.current_location)
+        if location is None:
+            return "Error: You are in an invalid location."
         item = next((item for item in location.items if item_name.lower() in item.name.lower()), None)
         if item:
             game.player.add_to_inventory(item)
@@ -55,8 +66,12 @@ class BasicCommandsPlugin:
         item = next((item for item in game.player.inventory if item_name.lower() in item.name.lower()), None)
         if item:
             game.player.remove_from_inventory(item)
-            game.world.get_location(game.player.current_location).add_item(item)
-            return f"You drop the {item.name}."
+            location = game.world.get_location(game.player.current_location)
+            if location:
+                location.add_item(item)
+                return f"You drop the {item.name}."
+            else:
+                return "Error: You are in an invalid location. Item not dropped."
         return f"You don't have a {item_name}."
 
     @staticmethod

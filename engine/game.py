@@ -48,7 +48,14 @@ class Game:
     def game_loop(self):
         logger.info("Entering game loop")
         while self.running:
-            self.ui.display_location(self.world.get_location(self.player.current_location))
+            current_location = self.world.get_location(self.player.current_location)
+            if current_location is None:
+                logger.error(f"Invalid location: {self.player.current_location}")
+                self.ui.display_error(f"Error: You are in an invalid location. Returning to starting location.")
+                self.player.current_location = self.config.get('start_location', 'start')
+                continue
+            
+            self.ui.display_location(current_location)
             command = self.ui.get_command()
             result = self.process_command(command)
             self.ui.display_result(result)
