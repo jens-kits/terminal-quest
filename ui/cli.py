@@ -89,9 +89,24 @@ class CLI:
         print(location.description)
         
         if location.items:
-            print(self.colorize("\nItems here:", 'yellow'))
+            print(self.colorize("\nYou can take the following items:", 'yellow'))
             for item in location.items:
                 print(f"- {item.name}")
+        
+        if location.objects:
+            print(self.colorize("\nYou can examine the following:", 'yellow'))
+            for obj in location.objects.keys():
+                print(f"- {obj}")
+
+        if location.npcs:
+            print(self.colorize("\nCharacters here:", 'yellow'))
+            for npc in location.npcs:
+                print(f"- {npc.name}")
+
+        if location.exits:
+            print(self.colorize("\nExits:", 'yellow'))
+            for direction, loc in location.exits.items():
+                print(f"- {direction.capitalize()}: {loc}")
 
     def get_command(self):
         return input(self.colorize("\n> ", 'green')).strip()

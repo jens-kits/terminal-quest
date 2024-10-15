@@ -73,6 +73,12 @@ class World:
     def get_npc(self, npc_name):
         return self.npcs.get(npc_name)
 
+    def get_hint(self, location_name):
+        location = self.get_location(location_name)
+        if location and hasattr(location, 'hint'):
+            return location.hint
+        return "There are no specific hints for this location. Keep exploring!"
+
 class Location:
     def __init__(self, data):
         self.name = data['name']
@@ -81,6 +87,7 @@ class Location:
         self.items = []
         self.npcs = []
         self.objects = data.get('objects', {})
+        self.hint = data.get('hint', "There's nothing specific to hint at here. Keep exploring!")
 
     def add_item(self, item):
         self.items.append(item)
@@ -110,9 +117,17 @@ class Location:
         description = f"{self.name}\n{'-' * len(self.name)}\n{self.description}\n"
         
         if self.items:
-            description += "\nItems here:\n" + "\n".join(f"- {item.name}" for item in self.items)
+            description += "\nYou can take the following items:\n" + "\n".join(f"- {item.name}" for item in self.items)
+        
+        if self.objects:
+            description += "\nYou can examine the following:\n" + "\n".join(f"- {obj}" for obj in self.objects.keys())
         
         if self.npcs:
             description += "\nCharacters here:\n" + "\n".join(f"- {npc.name}" for npc in self.npcs)
+        
+        if self.exits:
+            description += "\nExits:"
+            for direction, location in self.exits.items():
+                description += f"\n- {direction.capitalize()}: {location}"
         
         return description

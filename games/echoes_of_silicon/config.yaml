@@ -1,6 +1,52 @@
 game_name: "Echoes of Silicon"
 start_location: "City Entrance"
 
+locations:
+  - name: "City Entrance"
+    description: "You stand at the entrance of an abandoned city. Towering skyscrapers loom overhead, their windows dark and empty. The streets are overgrown with vegetation, nature reclaiming what was once lost. A faint electronic hum permeates the air. A rusty sign nearby catches your attention. To the east, you notice a small, dilapidated shed."
+    exits:
+      n: "Dome"
+      e: "Maintenance Shed"
+    items:
+      - "rusty key"
+    objects:
+      rusty sign: "The rusty sign reads: 'Welcome to Neo-Stockholm - Where AI and Humanity Coexist'. The irony is palpable."
+      skyscrapers: "The towering skyscrapers loom ominously, their windows like empty eye sockets staring down at you."
+      vegetation: "Thick vines and wild plants have overtaken the streets, pushing through cracks in the pavement and climbing up the buildings."
+    hint: "Try examining the objects around you. The rusty sign might have some useful information."
+
+  - name: "Dome"
+    description: "You approach a large domed structure. As you get closer, you realize it's an ancient botanical garden. The dome is cracked, but amazingly, plant life thrives inside. A control panel near the entrance flickers with dim light."
+    exits:
+      s: "City Entrance"
+    objects:
+      control panel: "The control panel is a complex array of buttons, switches, and screens. Most of it is dark, but a few lights still blink sporadically. You notice four main sections:\n1. Environmental Controls\n2. Security Systems\n3. Communication Array\n4. Power Management\nThere's also a keycard slot next to the panel."
+      crack: "The crack in the dome is substantial. It's a wonder the structure is still standing. Through the crack, you can see lush vegetation inside, thriving despite (or perhaps because of) the lack of human intervention."
+    hint: "The control panel seems important. Try interacting with it and examining it closely. You might need to find a keycard somewhere."
+
+  - name: "Maintenance Shed"
+    description: "You enter a small, dusty maintenance shed. Tools and spare parts litter the shelves and workbenches. Despite the years of neglect, it seems that this place once served an important function in maintaining the city's infrastructure."
+    exits:
+      w: "City Entrance"
+    items:
+      - "keycard"
+    objects:
+      workbench: "An old workbench covered in dust and cobwebs. Various tools are scattered across its surface."
+    hint: "This place looks like it might contain useful items. Try examining objects and looking around carefully."
+
+items:
+  - name: "rusty key"
+    description: "An old, rusty key. It looks like it might still work in the right lock."
+    
+  - name: "keycard"
+    description: "A sleek, electronic keycard. It looks like it might grant access to important systems."
+
+npcs:
+  # Add NPCs here when you're ready to implement them
+
+custom_commands:
+  # Add any game-specific commands here
+
 custom_loading_screen:
   - type: "line"
     content: "="
@@ -54,44 +100,3 @@ custom_loading_screen:
   - type: "input"
     content: "Press Enter to begin your adventure..."
     color: "yellow"
-
-locations:
-  - name: "City Entrance"
-    description: "You stand at the entrance of an abandoned city. Towering skyscrapers loom overhead, their windows dark and empty. The streets are overgrown with vegetation, nature reclaiming what was once lost. A faint electronic hum permeates the air. A rusty sign nearby catches your attention. To the east, you notice a small, dilapidated shed."
-    exits:
-      n: "Dome"
-      e: "Maintenance Shed"
-    items:
-      - "rusty key"
-    objects:
-      rusty sign: "The rusty sign reads: 'Welcome to Neo-Stockholm - Where AI and Humanity Coexist'. The irony is palpable."
-
-  - name: "Dome"
-    description: "You approach a large domed structure. As you get closer, you realize it's an ancient botanical garden. The dome is cracked, but amazingly, plant life thrives inside. A control panel near the entrance flickers with dim light."
-    exits:
-      s: "City Entrance"
-    objects:
-      control panel: "The control panel is a complex array of buttons, switches, and screens. Most of it is dark, but a few lights still blink sporadically."
-      crack: "The crack in the dome is substantial. It's a wonder the structure is still standing. Through the crack, you can see lush vegetation inside, thriving despite (or perhaps because of) the lack of human intervention."
-
-  - name: "Maintenance Shed"
-    description: "You enter a small, dusty maintenance shed. Tools and spare parts litter the shelves and workbenches. Despite the years of neglect, it seems that this place once served an important function in maintaining the city's infrastructure."
-    exits:
-      w: "City Entrance"
-    items:
-      - "keycard"
-    objects:
-      workbench: "An old workbench covered in dust and cobwebs. Various tools are scattered across its surface."
-
-items:
-  - name: "rusty key"
-    description: "An old, rusty key. It looks like it might still work in the right lock."
-    
-  - name: "keycard"
-    description: "A sleek, electronic keycard. It looks like it might grant access to important systems."
-
-npcs:
-  # Add NPCs here when you're ready to implement them
-
-custom_commands:
-  # Add any game-specific commands here
