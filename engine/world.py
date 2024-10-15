@@ -3,6 +3,7 @@
 from .item import Item
 from .npc import NPC
 import logging
+import random
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +76,7 @@ class World:
 
     def get_hint(self, location_name):
         location = self.get_location(location_name)
-        if location and hasattr(location, 'hint'):
+        if location:
             return location.hint
         return "There are no specific hints for this location. Keep exploring!"
 
@@ -105,29 +106,55 @@ class Location:
         return self.exits.get(direction)
 
     def get_item(self, item_name):
-        return next((item for item in self.items if item.name.lower() == item_name.lower()), None)
+        return next((item for item in self.items if item_name.lower() in item.name.lower()), None)
 
     def get_npc(self, npc_name):
-        return next((npc for npc in self.npcs if npc.name.lower() == npc_name.lower()), None)
+        return next((npc for npc in self.npcs if npc_name.lower() in npc.name.lower()), None)
 
     def get_object(self, object_name):
-        return self.objects.get(object_name.lower())
+        for name, description in self.objects.items():
+            if object_name.lower() in name.lower():
+                return description
+        return None
 
     def describe(self):
-        description = f"{self.name}\n{'-' * len(self.name)}\n{self.description}\n"
-        
+        description = f"{self.name}\n{'-' * len(self.name)}\n{self.description}"
+
+        # Subtly mention items
         if self.items:
-            description += "\nYou can take the following items:\n" + "\n".join(f"- {item.name}" for item in self.items)
-        
-        if self.objects:
-            description += "\nYou can examine the following:\n" + "\n".join(f"- {obj}" for obj in self.objects.keys())
-        
-        if self.npcs:
-            description += "\nCharacters here:\n" + "\n".join(f"- {npc.name}" for npc in self.npcs)
-        
+            item_hints = [
+                f"You notice {item.name} lying nearby." for item in self.items
+            ]
+            description += f" {random.choice(item_hints)}"
+
+        # Vaguely indicate exits
         if self.exits:
-            description += "\nExits:"
-            for direction, location in self.exits.items():
-                description += f"\n- {direction.capitalize()}: {location}"
-        
+            exit_hints = [
+                "You sense paths leading in multiple directions.",
+                "There seem to be ways to leave this area.",
+                "The area doesn't feel closed off."
+            ]
+            description += f" {random.choice(exit_hints)}"
+
+        # Mention NPCs if present
+        if self.npcs:
+            npc_hints = [
+                f"You're not alone here - you see {self.npcs[0].name}.",
+                f"In the distance, you spot {self.npcs[0].name}.",
+                f"Your attention is drawn to {self.npcs[0].name}."
+            ]
+            description += f" {random.choice(npc_hints)}"
+
+        # Hint at examinable objects
+        if self.objects:
+            object_hints = [
+                "There are several interesting features in this area.",
+                "Various objects catch your eye.",
+                "The surroundings seem worth a closer look."
+            ]
+            description += f" {random.choice(object_hints)}"
+
         return description
+
+    def get_available_directions(self):
+        return list(self.exits.keys())

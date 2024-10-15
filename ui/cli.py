@@ -28,102 +28,87 @@ class CLI:
 
     def show_loading_screen(self, game_config):
         self.clear_screen()
-        if game_config.get('custom_loading_screen'):
-            self.show_custom_loading_screen(game_config)
-        else:
-            self.show_default_loading_screen(game_config['game_name'])
-
-    def show_default_loading_screen(self, game_name):
-        print(self.colorize(f"Loading {game_name}...", 'cyan'))
+        print(self.colorize("ECHOES OF SILICON", 'cyan'))
+        print(self.colorize("Copyright KITS AB 1982", 'yellow'))
         print()
+        print(self.colorize("Connecting to ARPANET... please wait", 'green'))
+        self.show_progress_bar()
+        print(self.colorize("Connection established. Initiating game sequence...", 'green'))
+        time.sleep(1)
+
+    def show_progress_bar(self):
         for i in range(21):
             sys.stdout.write('\r')
-            sys.stdout.write(self.colorize("[%-20s] %d%%" % ('='*i, 5*i), 'green'))
+            sys.stdout.write(self.colorize(f"[{'#'*i:20}] {5*i}%", 'green'))
             sys.stdout.flush()
             time.sleep(0.1)
-        print("\n")
-        time.sleep(0.5)
+        print()
 
-    def show_custom_loading_screen(self, game_config):
-        loading_screen = game_config['custom_loading_screen']
-        for element in loading_screen:
-            if element['type'] == 'text':
-                self.slow_print(element['content'], speed=element.get('speed', 0.02), color=element.get('color', 'white'))
-            elif element['type'] == 'pause':
-                time.sleep(element['duration'])
-            elif element['type'] == 'input':
-                input(self.colorize(element['content'], element.get('color', 'white')))
-            elif element['type'] == 'clear':
-                self.clear_screen()
-            elif element['type'] == 'line':
-                print(element['content'] * element.get('repeat', 1))
+    def display_intro(self, game_config):
+        self.show_loading_screen(game_config)
+        self.clear_screen()
+        print(self.colorize("=" * 60, 'cyan'))
+        print(self.colorize("ECHOES OF SILICON", 'cyan'))
+        print(self.colorize("Copyright KITS AB 1982", 'yellow'))
+        print(self.colorize("A Post-Apocalyptic AI Adventure Game", 'magenta'))
+        print(self.colorize("=" * 60, 'cyan'))
+        print()
+        self.slow_print("Initializing system...", color='green')
+        self.slow_print("Establishing connection to central AI...", color='green')
+        self.slow_print("Connection established. Welcome, human.", color='green')
+        print()
+        self.slow_print("You have returned to Earth after centuries of absence.", color='magenta')
+        self.slow_print("The world you once knew is no more. Artificial Intelligence now reigns supreme.", color='magenta')
+        self.slow_print("Your mission: Uncover the fate of humanity and restore balance to a world", color='magenta')
+        self.slow_print("controlled by machines.", color='magenta')
+        print()
+        input(self.colorize("Press Enter to begin your adventure...", 'yellow'))
 
-    def slow_print(self, text, speed=0.02, color='white'):
+    def slow_print(self, text, speed=0.03, color='green'):
         for char in text:
             sys.stdout.write(self.colorize(char, color))
             sys.stdout.flush()
             time.sleep(speed)
         print()
 
-    def display_intro(self, game_config):
-        self.show_loading_screen(game_config)
-        if not game_config.get('custom_loading_screen'):
-            self.clear_screen()
-            print(self.colorize(f"Welcome to {game_config['game_name']}!", 'cyan'))
-            print(self.colorize("Embark on a text-based adventure...", 'yellow'))
-            print()
-            input(self.colorize("Press Enter to start...", 'green'))
-
     def display_outro(self, game_name):
         self.clear_screen()
         print(self.colorize(f"Thank you for playing {game_name}!", 'cyan'))
         print(self.colorize("We hope you enjoyed your adventure.", 'yellow'))
         print()
-        print(self.colorize("Farewell, adventurer!", 'magenta'))
+        print(self.colorize("Farewell, human.", 'magenta'))
         print()
         input(self.colorize("Press Enter to exit...", 'green'))
 
     def display_location(self, location):
         print(self.colorize(f"\n{location.name}", 'cyan'))
         print(self.colorize("-" * len(location.name), 'cyan'))
-        print(location.description)
-        
-        if location.items:
-            print(self.colorize("\nYou can take the following items:", 'yellow'))
-            for item in location.items:
-                print(f"- {item.name}")
-        
-        if location.objects:
-            print(self.colorize("\nYou can examine the following:", 'yellow'))
-            for obj in location.objects.keys():
-                print(f"- {obj}")
-
-        if location.npcs:
-            print(self.colorize("\nCharacters here:", 'yellow'))
-            for npc in location.npcs:
-                print(f"- {npc.name}")
-
-        if location.exits:
-            print(self.colorize("\nExits:", 'yellow'))
-            for direction, loc in location.exits.items():
-                print(f"- {direction.capitalize()}: {loc}")
+        print(self.colorize(location.description, 'green'))
 
     def get_command(self):
-        return input(self.colorize("\n> ", 'green')).strip()
+        try:
+            return input(self.colorize("\n> ", 'yellow')).strip()
+        except EOFError:
+            print("\nExiting game...")
+            return "quit"
+        except KeyboardInterrupt:
+            print("\nExiting game...")
+            return "quit"
 
     def display_result(self, result):
-        print(self.colorize(result, 'white'))
+        if result:
+            print(self.colorize(result, 'green'))
 
     def display_error(self, error):
         print(self.colorize(f"Error: {error}", 'red'))
 
     def display_inventory(self, inventory):
         if not inventory:
-            print(self.colorize("Your inventory is empty.", 'yellow'))
+            print(self.colorize("You are empty-handed.", 'yellow'))
         else:
-            print(self.colorize("Inventory:", 'yellow'))
+            print(self.colorize("You are carrying:", 'yellow'))
             for item in inventory:
-                print(f"- {item.name}")
+                print(self.colorize(f"- {item.name}", 'green'))
 
     def display_health(self, health):
         color = 'green' if health > 50 else 'yellow' if health > 25 else 'red'
