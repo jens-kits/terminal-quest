@@ -1,4 +1,4 @@
-game_name: "Echoes of Silicon"
+game_name: "ECHOES OF SILICON"
 start_location: "City Entrance"
 
 locations:
@@ -20,9 +20,25 @@ locations:
     exits:
       s: "City Entrance"
     objects:
-      control panel: "The control panel is a complex array of buttons, switches, and screens. Most of it is dark, but a few lights still blink sporadically. You notice four main sections:\n1. Environmental Controls\n2. Security Systems\n3. Communication Array\n4. Power Management\nThere's also a keycard slot next to the panel."
+      control panel: "The control panel is a complex array of buttons, switches, and screens. Most of it is dark, but a few lights still blink sporadically."
       crack: "The crack in the dome is substantial. It's a wonder the structure is still standing. Through the crack, you can see lush vegetation inside, thriving despite (or perhaps because of) the lack of human intervention."
     hint: "The control panel seems important. Try interacting with it and examining it closely. You might need to find a keycard somewhere."
+    interactions:
+      control panel:
+        menu:
+          - name: "Adjust Environmental Controls"
+            result: "The environmental controls are offline. It seems the system needs more power."
+          - name: "Access Security Systems"
+            result: "The security systems appear to be offline. You can see options for camera controls, door locks, and alarm systems, but they all require proper authorization to access."
+          - name: "Check Communication Array"
+            result: "The communication array is non-functional. It seems to have been damaged long ago. You can see options for local and long-range communications, but nothing responds to your touch."
+          - name: "Manage Power Systems"
+            result: "The power management system shows critical levels. Most of the city's power grid seems to be offline or operating at minimal capacity."
+          - name: "Use keycard slot"
+            action: "use_keycard"
+            result: "You need a keycard to use this function."
+          - name: "Examine panel closely"
+            description: "Upon closer inspection, you notice a small label near the keycard slot. It reads: 'Emergency Override - Authorized Personnel Only'."
 
   - name: "Maintenance Shed"
     description: "You enter a small, dusty maintenance shed. Tools and spare parts litter the shelves and workbenches. Despite the years of neglect, it seems that this place once served an important function in maintaining the city's infrastructure."
@@ -41,11 +57,9 @@ items:
   - name: "keycard"
     description: "A sleek, electronic keycard. It looks like it might grant access to important systems."
 
-npcs:
-  # Add NPCs here when you're ready to implement them
+npcs: []  # No NPCs in this basic setup
 
-custom_commands:
-  # Add any game-specific commands here
+custom_commands: {}  # No custom commands in this basic setup
 
 custom_loading_screen:
   - type: "line"
@@ -100,3 +114,9 @@ custom_loading_screen:
   - type: "input"
     content: "Press Enter to begin your adventure..."
     color: "yellow"
+
+win_message: "You have successfully gained control of the dome's systems. With access to the city's core systems, you now have the power to reshape this post-apocalyptic world. Perhaps, with time and careful management, you can restore the balance between humanity and AI."
+
+epilogue: "As you stand before the fully activated control panel, a sense of hope washes over you. The secrets of this long-abandoned city are now at your fingertips. What will you do with this newfound power? Will you work to revive the remnants of human civilization, or forge a new path of coexistence with the AI that now dominates the world? The future is yours to shape, but remember: with great power comes great responsibility."
+
+lose_message: "Your journey ends here, but the echoes of silicon continue to resonate through the abandoned city."

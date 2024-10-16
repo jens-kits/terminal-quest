@@ -89,6 +89,8 @@ class Location:
         self.npcs = []
         self.objects = data.get('objects', {})
         self.hint = data.get('hint', "There's nothing specific to hint at here. Keep exploring!")
+        self.interactions = data.get('interactions', {})
+        self.state = {}  # To keep track of location-specific states
 
     def add_item(self, item):
         self.items.append(item)
@@ -117,42 +119,43 @@ class Location:
                 return description
         return None
 
+    def interact_with_object(self, object_name, player):
+        for name, interaction in self.interactions.items():
+            if object_name.lower() in name.lower():
+                if callable(interaction):
+                    return interaction(self, player)
+                elif isinstance(interaction, dict):
+                    return self.handle_complex_interaction(interaction, player)
+                else:
+                    return interaction
+        return f"You interact with the {object_name}, but nothing special happens."
+
+    def handle_complex_interaction(self, interaction, player):
+        if 'condition' in interaction:
+            condition = interaction['condition']
+            if condition == 'has_item' and 'item' in interaction:
+                if player.has_item(interaction['item']):
+                    return interaction.get('success', "You successfully use the item.")
+                else:
+                    return interaction.get('failure', f"You need the {interaction['item']} to do this.")
+        elif 'menu' in interaction:
+            return {'menu': interaction['menu']}
+        return interaction.get('default', "Nothing happens.")
+
     def describe(self):
         description = f"{self.name}\n{'-' * len(self.name)}\n{self.description}"
 
-        # Subtly mention items
         if self.items:
-            item_hints = [
-                f"You notice {item.name} lying nearby." for item in self.items
-            ]
-            description += f" {random.choice(item_hints)}"
+            item_descriptions = [f"You see {item.name} here." for item in self.items]
+            description += f" {random.choice(item_descriptions)}"
 
-        # Vaguely indicate exits
         if self.exits:
-            exit_hints = [
-                "You sense paths leading in multiple directions.",
-                "There seem to be ways to leave this area.",
-                "The area doesn't feel closed off."
+            exit_descriptions = [
+                "You can see paths leading in multiple directions.",
+                "There are several ways to leave this area.",
+                "You notice exits in various directions."
             ]
-            description += f" {random.choice(exit_hints)}"
-
-        # Mention NPCs if present
-        if self.npcs:
-            npc_hints = [
-                f"You're not alone here - you see {self.npcs[0].name}.",
-                f"In the distance, you spot {self.npcs[0].name}.",
-                f"Your attention is drawn to {self.npcs[0].name}."
-            ]
-            description += f" {random.choice(npc_hints)}"
-
-        # Hint at examinable objects
-        if self.objects:
-            object_hints = [
-                "There are several interesting features in this area.",
-                "Various objects catch your eye.",
-                "The surroundings seem worth a closer look."
-            ]
-            description += f" {random.choice(object_hints)}"
+            description += f" {random.choice(exit_descriptions)}"
 
         return description
 

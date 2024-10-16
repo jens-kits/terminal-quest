@@ -31,6 +31,9 @@ class Game:
         self.custom_commands = self.config.get('custom_commands', {})
         if not isinstance(self.custom_commands, dict):
             self.custom_commands = {}
+        
+        self.keycard_used = False  # New variable to track if keycard has been used
+        self.active_menu = None  # To keep track of the active menu
 
     def set_ui(self, ui):
         self.ui = ui
@@ -53,10 +56,17 @@ class Game:
             result = self.process_command(command)
             if result:
                 self.ui.display_result(result)
+            
+            if self.check_game_over():
+                self.end_game(True)  # True indicates a win
+                break
 
     def process_command(self, command):
         try:
             command = command.lower()
+            
+            if self.active_menu:
+                return self.handle_menu_choice(command)
             
             if command in self.custom_commands:
                 return self.execute_custom_command(command)
@@ -87,9 +97,9 @@ class Game:
                 obj_name = command[8:].strip()
                 return self.examine_object(obj_name)
             
-            elif command.startswith("use "):
-                item_name = command[4:].strip()
-                return self.use_item(item_name)
+            elif command.startswith("use ") or command.startswith("interact "):
+                obj_name = command.split(maxsplit=1)[1].strip()
+                return self.interact_with_object(obj_name)
             
             elif command == "help":
                 return self.show_help()
@@ -100,8 +110,8 @@ class Game:
             elif command == "license":
                 return self.show_license()
             
-            elif command in ["quit", "exit"]:
-                self.end_game()
+            elif command in ["quit", "exit", "logout"]:
+                self.end_game(False)  # False indicates not a win
                 return "Thanks for playing!"
             
             return "I don't understand that command."
@@ -176,13 +186,53 @@ class Game:
         
         return f"You don't see any {obj_name} here."
 
-    def use_item(self, item_name):
-        item = self.player.get_item(item_name)
-        if item:
-            if hasattr(item, 'use'):
-                return item.use(self.player)
-            return f"You can't use that."
-        return f"You don't have that."
+    def interact_with_object(self, obj_name):
+        location = self.world.get_location(self.player.current_location)
+        if location is None:
+            return "You are in an invalid location."
+        
+        interaction_result = location.interact_with_object(obj_name, self.player)
+        if isinstance(interaction_result, dict) and 'menu' in interaction_result:
+            self.active_menu = interaction_result['menu']
+            return self.display_menu()
+        return interaction_result
+
+    def handle_menu_choice(self, choice):
+        if not self.active_menu:
+            return "There is no active menu."
+        
+        try:
+            choice = int(choice)
+        except ValueError:
+            return "Please enter a number to make your choice."
+        
+        if 1 <= choice <= len(self.active_menu):
+            selected_option = self.active_menu[choice - 1]
+            if 'action' in selected_option:
+                action = selected_option['action']
+                if action == 'use_keycard' and self.player.has_item('keycard'):
+                    self.keycard_used = True
+                    self.active_menu = None
+                    return "You insert the keycard into the control panel. The system comes to life, granting you access to the city's core functions. You've done it!"
+                elif action == 'examine':
+                    return selected_option.get('description', "You examine it closely but find nothing special.")
+                # Add more actions as needed
+            result = selected_option.get('result', "Nothing happens.")
+            if selected_option.get('clear_menu', False):
+                self.active_menu = None
+            return result
+        elif choice == len(self.active_menu) + 1:  # Option to exit menu
+            self.active_menu = None
+            return "You step away from the control panel."
+        else:
+            return "Invalid choice. Please try again."
+
+    def display_menu(self):
+        menu_text = "The control panel responds to your touch. What would you like to do?\n"
+        for i, option in enumerate(self.active_menu, 1):
+            menu_text += f"{i}. {option['name']}\n"
+        menu_text += f"{len(self.active_menu) + 1}. Step away from the object"
+        return menu_text
 
     def show_help(self):
         help_text = """
@@ -193,11 +243,11 @@ INVENTORY - Check your inventory
 TAKE [item] - Pick up an item
 DROP [item] - Drop an item
 EXAMINE [object] - Look closely at an object
-USE [item] - Use an item
+USE/INTERACT [object] - Interact with an object or use an item
 HINT - Get a hint for the current location
 HELP - Show this help message
 LICENSE - Show the game's license information
-QUIT - End the game
+QUIT/EXIT/LOGOUT - End the game
         """
         return help_text.strip()
 
@@ -237,3 +287,29 @@ SOFTWARE.
 
     def execute_custom_command(self, command):
         command_data = self.custom_commands.get(command)
+        if command_data is None:
+            return f"Invalid custom command: {command}"
+        if 'text' in command_data:
+            return process_text(command_data['text'], self.variables)
+        elif 'action' in command_data:
+            return self.execute_action(command_data['action'])
+        else:
+            return f"Invalid custom command: {command}"
+
+    def execute_action(self, action):
+        return f"Executing action: {action}"
+
+    def check_game_over(self):
+        # Game is over when keycard has been used on the control panel in the Dome
+        return self.keycard_used and self.world.get_location(self.player.current_location).name == "Dome"
+
+    def end_game(self, is_win=False):
+        self.running = False
+        if is_win:
+            self.ui.display_game_over(True, self.config.get('win_message', ''), self.config.get('epilogue', ''))
+        else:
+            self.ui.display_game_over(False, self.config.get('lose_message', ''))
+
+    def display_text(self, text):
+        processed_text = process_text(text, self.variables)
+        self.ui.display(processed_text)
