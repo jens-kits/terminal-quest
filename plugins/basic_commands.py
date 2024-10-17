@@ -23,6 +23,8 @@ class BasicCommandsPlugin:
             return BasicCommandsPlugin.hint(game)
         elif command == "help":
             return BasicCommandsPlugin.help(game)
+        elif command == "license":
+            return BasicCommandsPlugin.show_license(game)
         elif command == "credits":
             return game.game_logic.show_credits()
         elif command in ["quit", "exit", "logout"]:
@@ -64,6 +66,10 @@ class BasicCommandsPlugin:
     @staticmethod
     def help(game):
         return game.show_help()
+
+    @staticmethod
+    def show_license(game):
+        return game.show_license()
 
     @staticmethod
     def logout(game):
