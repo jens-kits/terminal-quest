@@ -1,4 +1,5 @@
 game_name: "ECHOES OF SILICON"
+game_id: "echoes_of_silicon"
 start_location: "City Entrance"
 
 locations:
@@ -114,9 +115,3 @@ custom_loading_screen:
   - type: "input"
     content: "Press Enter to begin your adventure..."
     color: "yellow"
-
-win_message: "You have successfully gained control of the dome's systems. With access to the city's core systems, you now have the power to reshape this post-apocalyptic world. Perhaps, with time and careful management, you can restore the balance between humanity and AI."
-
-epilogue: "As you stand before the fully activated control panel, a sense of hope washes over you. The secrets of this long-abandoned city are now at your fingertips. What will you do with this newfound power? Will you work to revive the remnants of human civilization, or forge a new path of coexistence with the AI that now dominates the world? The future is yours to shape, but remember: with great power comes great responsibility."
-
-lose_message: "Your journey ends here, but the echoes of silicon continue to resonate through the abandoned city."

@@ -19,7 +19,7 @@ class Game:
             logger.error(f"Failed to load configuration from {config_file}")
             raise ValueError(f"Failed to load configuration from {config_file}")
         
-        self.game_name = self.config.get('game_name', 'ECHOES OF SILICON')
+        self.game_name = self.config.get('game_name', 'TerminalQuest Game')
         
         self.world = World(self.config)
         self.player = Player(self.config.get('start_location', 'start'))
@@ -32,8 +32,11 @@ class Game:
         if not isinstance(self.custom_commands, dict):
             self.custom_commands = {}
         
-        self.keycard_used = False  # New variable to track if keycard has been used
         self.active_menu = None  # To keep track of the active menu
+        
+        # Load game-specific logic
+        game_logic_module = __import__(f"games.{self.config.get('game_id')}.custom_logic", fromlist=['GameLogic'])
+        self.game_logic = game_logic_module.GameLogic(self)
 
     def set_ui(self, ui):
         self.ui = ui
@@ -57,7 +60,7 @@ class Game:
             if result:
                 self.ui.display_result(result)
             
-            if self.check_game_over():
+            if self.game_logic.check_game_over():
                 self.end_game(True)  # True indicates a win
                 break
 
@@ -75,44 +78,6 @@ class Game:
                 result = plugin.execute(self, command)
                 if result is not None:
                     return result
-            
-            if command in ["n", "s", "e", "w", "north", "south", "east", "west"]:
-                return self.move_player(command)
-            
-            elif command in ["look", "l"]:
-                return self.look()
-            
-            elif command in ["inventory", "i"]:
-                return self.display_inventory()
-            
-            elif command.startswith("take "):
-                item_name = command[5:].strip()
-                return self.take_item(item_name)
-            
-            elif command.startswith("drop "):
-                item_name = command[5:].strip()
-                return self.drop_item(item_name)
-            
-            elif command.startswith("examine "):
-                obj_name = command[8:].strip()
-                return self.examine_object(obj_name)
-            
-            elif command.startswith("use ") or command.startswith("interact "):
-                obj_name = command.split(maxsplit=1)[1].strip()
-                return self.interact_with_object(obj_name)
-            
-            elif command == "help":
-                return self.show_help()
-            
-            elif command == "hint":
-                return self.get_hint()
-            
-            elif command == "license":
-                return self.show_license()
-            
-            elif command in ["quit", "exit", "logout"]:
-                self.end_game(False)  # False indicates not a win
-                return "Thanks for playing!"
             
             return "I don't understand that command."
         except Exception as e:
@@ -198,41 +163,10 @@ class Game:
         return interaction_result
 
     def handle_menu_choice(self, choice):
-        if not self.active_menu:
-            return "There is no active menu."
-        
-        try:
-            choice = int(choice)
-        except ValueError:
-            return "Please enter a number to make your choice."
-        
-        if 1 <= choice <= len(self.active_menu):
-            selected_option = self.active_menu[choice - 1]
-            if 'action' in selected_option:
-                action = selected_option['action']
-                if action == 'use_keycard' and self.player.has_item('keycard'):
-                    self.keycard_used = True
-                    self.active_menu = None
-                    return "You insert the keycard into the control panel. The system comes to life, granting you access to the city's core functions. You've done it!"
-                elif action == 'examine':
-                    return selected_option.get('description', "You examine it closely but find nothing special.")
-                # Add more actions as needed
-            result = selected_option.get('result', "Nothing happens.")
-            if selected_option.get('clear_menu', False):
-                self.active_menu = None
-            return result
-        elif choice == len(self.active_menu) + 1:  # Option to exit menu
-            self.active_menu = None
-            return "You step away from the control panel."
-        else:
-            return "Invalid choice. Please try again."
+        return self.game_logic.handle_menu_choice(choice)
 
     def display_menu(self):
-        menu_text = "The control panel responds to your touch. What would you like to do?\n"
-        for i, option in enumerate(self.active_menu, 1):
-            menu_text += f"{i}. {option['name']}\n"
-        menu_text += f"{len(self.active_menu) + 1}. Step away from the object"
-        return menu_text
+        return self.game_logic.display_menu(self.active_menu)
 
     def show_help(self):
         help_text = """
@@ -298,10 +232,6 @@ SOFTWARE.
 
     def execute_action(self, action):
         return f"Executing action: {action}"
-
-    def check_game_over(self):
-        # Game is over when keycard has been used on the control panel in the Dome
-        return self.keycard_used and self.world.get_location(self.player.current_location).name == "Dome"
 
     def end_game(self, is_win=False):
         self.running = False

@@ -22,9 +22,9 @@ class BasicCommandsPlugin:
         elif command == "hint":
             return BasicCommandsPlugin.hint(game)
         elif command == "help":
-            return BasicCommandsPlugin.help()
+            return BasicCommandsPlugin.help(game)
         elif command == "credits":
-            return BasicCommandsPlugin.credits()
+            return game.game_logic.show_credits()
         elif command in ["quit", "exit", "logout"]:
             return BasicCommandsPlugin.logout(game)
         return None  # Command not recognized by this plugin
@@ -62,38 +62,12 @@ class BasicCommandsPlugin:
         return game.get_hint()
 
     @staticmethod
-    def help():
-        return """
-Available commands:
-N, S, E, W - Move in a direction
-LOOK - Examine your surroundings
-INVENTORY - Check your inventory
-TAKE [item] - Pick up an item
-DROP [item] - Drop an item
-EXAMINE [object] - Look closely at an object
-USE/INTERACT [object] - Interact with an object or use an item
-HINT - Get a hint for the current location
-HELP - Show this help message
-CREDITS - Show game credits
-QUIT/EXIT/LOGOUT - End the game
-        """
-
-    @staticmethod
-    def credits():
-        return """
-ECHOES OF SILICON
-A Post-Apocalyptic AI Adventure Game
-
-Created by:
-- Jens Abrahamsson
-- Claude (AI Assistant)
-
-Thank you for playing!
-        """
+    def help(game):
+        return game.show_help()
 
     @staticmethod
     def logout(game):
-        game.end_game()  # Now calling end_game() without arguments
+        game.end_game()
         return "Thank you for playing. Goodbye!"
 
 def register_plugin():
