@@ -28,13 +28,16 @@ class CLI:
 
     def show_loading_screen(self, game_config):
         self.clear_screen()
-        print(self.colorize("ECHOES OF SILICON", 'cyan'))
-        print(self.colorize("Copyright KITS AB 1982", 'yellow'))
-        print()
-        print(self.colorize("Connecting to ARPANET... please wait", 'green'))
-        self.show_progress_bar()
-        print(self.colorize("Connection established. Initiating game sequence...", 'green'))
-        time.sleep(1)
+        loading_screen = game_config.get('custom_loading_screen', [])
+        for item in loading_screen:
+            if item['type'] == 'text':
+                self.slow_print(item['content'], color=item.get('color', 'white'), speed=item.get('speed', 0.03))
+            elif item['type'] == 'line':
+                print(self.colorize(item['content'] * item.get('repeat', 1), item.get('color', 'white')))
+            elif item['type'] == 'pause':
+                time.sleep(item.get('duration', 1))
+            elif item['type'] == 'input':
+                input(self.colorize(item['content'], item.get('color', 'white')))
 
     def show_progress_bar(self):
         for i in range(21):
@@ -46,23 +49,6 @@ class CLI:
 
     def display_intro(self, game_config):
         self.show_loading_screen(game_config)
-        self.clear_screen()
-        print(self.colorize("=" * 60, 'white'))
-        print(self.colorize("ECHOES OF SILICON", 'cyan'))
-        print(self.colorize("Copyright KITS AB 1982", 'yellow'))
-        print(self.colorize("A Post-Apocalyptic AI Adventure Game", 'magenta'))
-        print(self.colorize("=" * 60, 'white'))
-        print()
-        self.slow_print("Initializing system...", color='green')
-        self.slow_print("Establishing connection to central AI...", color='green')
-        self.slow_print("Connection established. Welcome, human.", color='green')
-        print()
-        self.slow_print("You have returned to Earth after centuries of absence.", color='magenta')
-        self.slow_print("The world you once knew is no more. Artificial Intelligence now reigns supreme.", color='magenta')
-        self.slow_print("Your mission: Uncover the fate of humanity and restore balance to a world", color='magenta')
-        self.slow_print("controlled by machines.", color='magenta')
-        print()
-        input(self.colorize("Press Enter to begin your adventure...", 'yellow'))
 
     def slow_print(self, text, speed=0.03, color='white'):
         for char in text:
@@ -73,30 +59,22 @@ class CLI:
 
     def display_game_over(self, is_win, message, epilogue=None):
         self.clear_screen()
-        if is_win:
-            print(self.colorize("GAME OVER", 'red'))
+        print(self.colorize("GAME OVER", 'red'))
+        print()
+        print(self.colorize("=" * 60, 'white'))
+        print()
+        self.slow_print(message, color='yellow', speed=0.02)
+        print()
+        print(self.colorize("=" * 60, 'white'))
+        print()
+        if epilogue:
+            print(self.colorize("Epilogue:", 'cyan'))
+            self.slow_print(epilogue, color='green', speed=0.02)
             print()
             print(self.colorize("=" * 60, 'white'))
-            print()
-            self.slow_print(message, color='yellow', speed=0.02)
-            print()
-            print(self.colorize("=" * 60, 'white'))
-            print()
-            if epilogue:
-                print(self.colorize("Epilogue:", 'cyan'))
-                self.slow_print(epilogue, color='green', speed=0.02)
-                print()
-                print(self.colorize("=" * 60, 'white'))
-            print()
-            print(self.colorize("Thank you for playing ECHOES OF SILICON!", 'magenta'))
-            print()
-            print(self.colorize("You were successful this time... but you will soon be made redundant by AI", 'red'))
-            print()
-        else:
-            print(self.colorize("GAME OVER", 'red'))
-            print()
-            self.slow_print(message, color='yellow')
-            print()
+        print()
+        print(self.colorize("Thank you for playing!", 'magenta'))
+        print()
         input(self.colorize("Press Enter to exit...", 'yellow'))
 
     def display_location(self, location):
@@ -136,11 +114,10 @@ class CLI:
     def display_score(self, score):
         print(self.colorize(f"Score: {score}", 'cyan'))
 
-    def display_outro(self, game_name):
+    def display_outro(self, game_config):
         self.clear_screen()
-        print(self.colorize(f"Thank you for playing {game_name}!", 'cyan'))
-        print(self.colorize("We hope you enjoyed your adventure.", 'yellow'))
-        print()
-        print(self.colorize("Farewell, human.", 'magenta'))
+        outro_text = game_config.get('outro_text', [])
+        for line in outro_text:
+            self.slow_print(line.get('content', ''), color=line.get('color', 'white'), speed=line.get('speed', 0.03))
         print()
         input(self.colorize("Press Enter to exit...", 'green'))
