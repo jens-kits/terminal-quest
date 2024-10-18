@@ -1,0 +1,300 @@
+game_name: "ALIGNMENT QUEST: THE SCALED AGILE SAGA"
+game_id: "alignment_quest"
+start_location: "Kickoff Room"
+
+locations:
+  - name: "Kickoff Room"
+    description: "The grand auditorium buzzes with anticipation. A massive screen dominates the stage, and the air is charged with the energy of new beginnings and coffee."
+    exits:
+      n: "Planning Floor"
+      e: "Scaling Atrium"
+      s: "Value Stream Corridor"
+    objects:
+      agenda screen: "An intricate agenda outlines two days of intense planning across multiple teams and programs."
+      coffee station: "A bustling area with various caffeinated beverages. A sign reads: 'Fuel for Agility'."
+    items:
+      - "program overview"
+    hint: "Study the agenda screen and collect the program overview. These will guide your journey through the PI planning maze."
+
+  - name: "Planning Floor"
+    description: "A vast open space filled with digital boards, sticky notes, and the constant murmur of collaboration. Scrum Masters dart between team huddles."
+    exits:
+      s: "Kickoff Room"
+      e: "Innovation Corner"
+      w: "Team Lounge"
+      n: "DevOps Dojo"
+    objects:
+      digital board: "A massive touchscreen displaying a kaleidoscope of user stories, tasks, and blockers across multiple sprints."
+      scrum altar: "A circular table surrounded by chairs, resembling King Arthur's Round Table. Sticky notes and markers are arranged at the center like sacred objects."
+    items:
+      - "golden sticky note"
+      - "sprint planning toolkit"
+    hint: "Use the sprint planning toolkit at the scrum altar to align the team's priorities. The golden sticky note can be a powerful tool, but use it wisely."
+
+  - name: "Innovation Corner"
+    description: "A space that seems to defy reality, filled with holographic displays of future visions and cutting-edge concepts. The air crackles with potential and a hint of uncertainty."
+    exits:
+      w: "Planning Floor"
+      s: "Scaling Atrium"
+      e: "Customer Journey Canyon"
+    objects:
+      vision board: "A shimmering holographic display showcasing potential product futures. Images shift and morph, representing the fluid nature of innovation."
+      idea incubator: "A glowing chamber where team members can enter to brainstorm. Its walls change color based on the 'innovation level' inside."
+    items:
+      - "future scope glasses"
+    hint: "Don the future scope glasses to gain insights into potential product directions. Use these visions to guide your planning, but remember to balance innovation with feasibility."
+
+  - name: "Scaling Atrium"
+    description: "A vast, multi-level space representing the SAFe framework. Bridges and elevators connect different levels, each symbolizing a layer of scaled agile. A complex web of strings crisscrosses the atrium."
+    exits:
+      w: "Kickoff Room"
+      n: "Innovation Corner"
+      e: "Release Train Station"
+      s: "Dependency Den"
+    objects:
+      dependency web: "An intricate 3D structure of interconnected strings. Tugging on one string causes vibrations throughout the entire structure."
+      scaling elevator: "A transparent elevator that moves both vertically and horizontally, representing movement between different SAFe levels."
+    items:
+      - "framework tuning fork"
+    hint: "Use the framework tuning fork on the dependency web to identify dissonance in your plans. The scaling elevator can help you navigate between different levels of the organization."
+
+  - name: "Team Lounge"
+    description: "A cozy space designed for relaxation and informal chats. Bean bags, whiteboards, and various games are scattered around. The scent of herbal tea permeates the air."
+    exits:
+      e: "Planning Floor"
+      s: "Wellness Center"
+    objects:
+      recharge station: "A set of meditation pods where team members can take short mental breaks."
+      idea wall: "A massive whiteboard filled with random ideas, doodles, and the occasional breakthrough insight."
+    items:
+      - "burnout shield"
+      - "collaboration catalyst"
+    hint: "The burnout shield can protect teams from overwork, but it's a temporary solution. Use the collaboration catalyst to foster long-term team cohesion."
+
+  - name: "DevOps Dojo"
+    description: "A high-tech dojo where development and operations intersect. Walls display real-time metrics, and the sound of smoothly running CI/CD pipelines creates a zen-like atmosphere."
+    exits:
+      s: "Planning Floor"
+      e: "Automation Arena"
+    objects:
+      pipeline simulator: "A complex tube system representing various stages of the CI/CD pipeline. Glowing orbs (features) flow through it at varying speeds."
+      metric meditation cushions: "Cushions that vibrate based on key performance indicators, allowing team members to 'feel' the pulse of the project."
+    items:
+      - "devops harmony flute"
+    hint: "Play the devops harmony flute to align development and operations rhythms. Interact with the pipeline simulator to identify and remove bottlenecks in your delivery process."
+
+  - name: "Customer Journey Canyon"
+    description: "A sprawling canyon where the walls are carved with user stories and customer feedback. A river of user data flows through the center, occasionally forming whirlpools of insight."
+    exits:
+      w: "Innovation Corner"
+      s: "Release Train Station"
+    objects:
+      empathy echo chamber: "A cave that amplifies and reflects customer emotions, allowing teams to truly feel user pain points."
+      journey mapping bridge: "A rope bridge that sways and shifts based on customer behavior data."
+    items:
+      - "customer insight gem"
+    hint: "Cross the journey mapping bridge carefully, paying attention to how it moves. Use the empathy echo chamber to gain deeper understanding of customer needs."
+
+  - name: "Release Train Station"
+    description: "A bustling station with tracks leading off into the distance. Trains of various sizes, representing different release cadences, wait at the platforms."
+    exits:
+      n: "Customer Journey Canyon"
+      w: "Scaling Atrium"
+      s: "Feature Factory"
+    objects:
+      departure board: "A large board displaying upcoming releases, their features, and status."
+      release train: "A sleek train ready to be loaded with the next set of features for release."
+    items:
+      - "release conductor baton"
+    hint: "Use the release conductor baton to orchestrate the loading of features onto the release train. Pay attention to the departure board to prioritize effectively."
+
+  - name: "Dependency Den"
+    description: "A cavern-like space where project dependencies take physical form. Stalactites and stalagmites of interconnected tasks reach towards each other, some barely touching, others fused solid."
+    exits:
+      n: "Scaling Atrium"
+      e: "Feature Factory"
+    objects:
+      dependency detangler: "A device that uses lasers to map and potentially sever dependencies."
+      cross-team bridge builder: "A miniature construction site where you can prototype connections between teams and components."
+    items:
+      - "dependency scissors"
+    hint: "Use the dependency scissors carefully with the dependency detangler. Sometimes, creating new connections with the cross-team bridge builder is more effective than cutting existing ones."
+
+  - name: "Feature Factory"
+    description: "A whimsical factory floor where raw ideas are transformed into fully-formed features. Conveyor belts carry user stories through various stages of refinement."
+    exits:
+      n: "Release Train Station"
+      w: "Dependency Den"
+      e: "Backlog Refinery"
+    objects:
+      story smelter: "A forge-like machine that takes in raw ideas and molds them into structured user stories."
+      acceptance criteria loom: "A loom that weaves acceptance criteria into the fabric of each story."
+    items:
+      - "feature polish cloth"
+    hint: "Use the feature polish cloth on newly forged stories to enhance their clarity and value. Pay attention to the acceptance criteria loom to ensure stories are well-defined."
+
+  - name: "Backlog Refinery"
+    description: "A space that's part library, part recycling center. Shelves of backlogs line the walls, while a central machine sorts and refines backlog items."
+    exits:
+      w: "Feature Factory"
+      n: "Value Stream Corridor"
+    objects:
+      backlog distiller: "A complex apparatus that takes in raw backlog items and refines them into clear, valuable stories."
+      priority scales: "A set of scales used to weigh the relative priority of different backlog items."
+    items:
+      - "backlog pruning shears"
+    hint: "Use the backlog pruning shears to carefully trim unnecessary items from the backlog. The priority scales can help you make tough decisions about what to keep and what to cut."
+
+  - name: "Value Stream Corridor"
+    description: "A long corridor with walls that visually represent the flow of value from concept to customer. Different sections move at different speeds, illustrating various stages of the value stream."
+    exits:
+      s: "Backlog Refinery"
+      n: "Kickoff Room"
+    objects:
+      value stream map: "An intricate, animated diagram showing the flow of value through the entire system."
+      bottleneck visualizer: "A narrow passage that team members can walk through, physically experiencing the slowdowns in the process."
+    items:
+      - "flow accelerator"
+    hint: "Use the flow accelerator at identified bottlenecks to improve the overall value stream. Study the value stream map carefully to identify areas for improvement."
+
+  - name: "Wellness Center"
+    description: "A tranquil space dedicated to team health and sustainability. The atmosphere is calm, with soothing sounds and aromatherapy filling the air."
+    exits:
+      n: "Team Lounge"
+    objects:
+      work-life balance scales: "A large set of scales that visually represent the balance between work and personal life."
+      team health monitor: "A screen displaying various metrics related to team morale, stress levels, and overall well-being."
+    items:
+      - "rejuvenation elixir"
+    hint: "Use the rejuvenation elixir wisely to boost team morale and prevent burnout. Pay close attention to the team health monitor to proactively address any well-being issues."
+
+  - name: "Automation Arena"
+    description: "A high-tech arena where manual processes face off against their automated counterparts. Robots and scripts zoom around, tackling various tasks with varying degrees of success."
+    exits:
+      w: "DevOps Dojo"
+    objects:
+      automation accelerator: "A particle accelerator-like device that speeds up manual processes until they break or become automated."
+      bot battleground: "An area where different automation bots compete to solve problems most efficiently."
+    items:
+      - "automation wand"
+    hint: "Wave the automation wand at repetitive tasks to explore automation possibilities. Observe the bot battleground to learn which processes are ripe for automation and which might need a human touch."
+
+items:
+  - name: "program overview"
+    description: "A comprehensive document outlining the goals and scope of the current Program Increment."
+
+  - name: "golden sticky note"
+    description: "A shimmering golden sticky note that, when used, instantly prioritizes a user story."
+
+  - name: "sprint planning toolkit"
+    description: "A set of tools designed to facilitate effective sprint planning sessions."
+
+  - name: "future scope glasses"
+    description: "Special glasses that provide visions of potential product futures when worn."
+
+  - name: "framework tuning fork"
+    description: "A tuning fork that resonates with the 'frequency' of your agile framework, highlighting misalignments."
+
+  - name: "burnout shield"
+    description: "A transparent shield that can protect teams from burnout, providing temporary relief from overwhelming workloads."
+
+  - name: "collaboration catalyst"
+    description: "A small vial of liquid that, when used, enhances team cooperation and communication."
+
+  - name: "devops harmony flute"
+    description: "A flute that, when played, aligns the rhythms of development and operations teams."
+
+  - name: "customer insight gem"
+    description: "A crystallized form of customer feedback that provides deep insights when examined closely."
+
+  - name: "release conductor baton"
+    description: "A baton that allows the wielder to orchestrate and synchronize release activities across teams."
+
+  - name: "dependency scissors"
+    description: "A pair of scissors capable of cutting through even the most tangled project dependencies."
+
+  - name: "feature polish cloth"
+    description: "A cloth that, when rubbed on a feature, enhances its clarity and value proposition."
+
+  - name: "backlog pruning shears"
+    description: "A tool for carefully trimming and shaping the product backlog."
+
+  - name: "flow accelerator"
+    description: "A device that can speed up the flow of work through identified bottlenecks in the value stream."
+
+  - name: "rejuvenation elixir"
+    description: "A potion that restores team energy and prevents burnout when used."
+
+  - name: "automation wand"
+    description: "A wand that can turn manual processes into automated ones with a wave."
+
+npcs: []  # No NPCs in this setup
+
+custom_commands: {}  # No custom commands in this setup
+
+custom_loading_screen:
+  - type: "line"
+    content: "="
+    repeat: 60
+  - type: "text"
+    content: "ALIGNMENT QUEST: THE SCALED AGILE SAGA"
+    color: "cyan"
+  - type: "text"
+    content: "A SAFe Adventure in Agile Wonderland"
+    color: "yellow"
+  - type: "line"
+    content: "="
+    repeat: 60
+  - type: "pause"
+    duration: 1
+  - type: "text"
+    content: "Initializing SAFe practices..."
+    color: "green"
+    speed: 0.02
+  - type: "text"
+    content: "Scaling Agile to enterprise level..."
+    color: "green"
+    speed: 0.02
+  - type: "text"
+    content: "Alignment achieved. Welcome, Agile Adventurer."
+    color: "green"
+    speed: 0.02
+  - type: "pause"
+    duration: 0.5
+  - type: "text"
+    content: "You find yourself at the start of a crucial PI planning event."
+    color: "blue"
+    speed: 0.01
+  - type: "text"
+    content: "Your mission: Navigate the complexities of scaled Agile,"
+    color: "blue"
+    speed: 0.01
+  - type: "text"
+    content: "align multiple teams, and emerge with a coherent plan."
+    color: "blue"
+    speed: 0.01
+  - type: "text"
+    content: "May the spirit of collaboration be with you!"
+    color: "blue"
+    speed: 0.01
+  - type: "pause"
+    duration: 0.5
+  - type: "input"
+    content: "Press Enter to begin your Agile journey..."
+    color: "yellow"
+
+win_message: "Congratulations! You've successfully navigated the complexities of PI planning and achieved alignment across all teams. Your skillful management of dependencies, risks, and team dynamics has resulted in a coherent and achievable plan. The organization stands poised for a successful program increment, thanks to your leadership. Remember, in the world of Agile, the journey of improvement never ends!"
+
+lose_message: "Unfortunately, the challenges of misalignment have overwhelmed the planning process. Teams are working at cross-purposes, dependencies have become tangled, and the backlog has descended into disarray. It seems that this time, the complexities of scaled Agile have proven too much. But remember, in true Agile spirit, failure is just another opportunity to learn and improve!"
+
+epilogue: "As you stand before the completed PI plan, a sense of accomplishment washes over you. The teams are aligned, risks are mitigated, and a clear path forward has emerged from the chaos. Yet, you can't help but reflect on the journey - the struggles with bureaucracy, the challenge of maintaining agility at scale, and the constant balance between process and flexibility. You realize that while SAFe and Agile methodologies are powerful tools, they are just that - tools. The real magic lies in the people, their creativity, and their ability to adapt. As you leave the planning session, you carry with you not just a plan, but a deeper understanding of what it truly means to be Agile in a complex, scaling organization. The adventure may be over, but the quest for continuous improvement never ends."
+
+outro_text:
+  - content: "Thank you for playing ALIGNMENT QUEST!"
+    color: "cyan"
+  - content: "We hope you enjoyed your Agile adventure."
+    color: "yellow"
+  - content: "Remember, the key to success is not just in the framework, but in the people who bring it to life."
+    color: "magenta"
+  - content: "Now, go forth and spread the spirit of true agility!"
+    color: "green"
